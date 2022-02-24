@@ -20,14 +20,41 @@ public class Percolation {
         virtualBottomSite = totalSites - 1;
         uf = new WeightedQuickUnionUF(totalSites);
         sites = new boolean[n][n];
+        // TODO connect all of top row to virtualTopSite
+        // TODO connect all of bottom row to virtualBottomSite
     }
 
     // opens the site (row, col) if it is not open already
     public void open(int row, int col){
         check(row, col);
         sites[row - 1][col - 1] = true;
-        // check if adjacent sites are also open, and if so, connect.
+        int p = getSite(row, col);
+        
+        // union left site
+        int leftRow = row - 1;
+        if (isValidSite(leftRow, col) && isOpen(leftRow, col)){
+            int q = getSite(leftRow, col);
+            uf.union(p, q);
+        }
+
+        // union right site
+        int rightRow = row + 1;
+        if (isValidSite(rightRow, col) && isOpen(rightRow, col)){
+            int q = getSite(rightRow, col);
+            uf.union(p, q);
+        }
+
+        // TODO union top and bottom sites
+
         numberOfOpenSites++;
+    }
+
+    private int getSite(int row, int col){
+        return (row - 1) * 3 + (col - 1);
+    }
+
+    private boolean isValidSite(int row, int col){
+        return !(row == 0 || row > n || col == 0 || col > n);
     }
 
     // is the site (row, col) open?
@@ -61,7 +88,8 @@ public class Percolation {
     }
 
     public static void main(String args[]){
-        Percolation percolation = new Percolation(3);
-        percolation.open(10, 10);
+        // System.out.println(getSite(0, 0));
+        // Percolation percolation = new Percolation(3);
+        // percolation.open(10, 10);
     }
 }
