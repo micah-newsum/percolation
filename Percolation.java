@@ -15,15 +15,25 @@ public class Percolation {
         }
 
         this.n = n;
-        int totalSites = n^2 + 2;
+        int totalSites = (int) Math.pow(n, 2) + 2;
         virtualTopSite = totalSites - 2;
         virtualBottomSite = totalSites - 1;
         uf = new WeightedQuickUnionUF(totalSites);
         sites = new boolean[n][n];
 
         // connect all of top row to virtualTopSite
-        
+        for (int i = 1; i <= n; i++) {
+            int p = getSite(1, i);
+            System.out.printf("p=%d ,q=%d\n",p , virtualTopSite);
+            uf.union(p, virtualTopSite);
+        }
+
         // connect all of bottom row to virtualBottomSite
+        for (int i = 1; i <= n; i++) {
+            int p = getSite(n, i);
+            System.out.printf("p=%d ,q=%d\n", p , virtualBottomSite);
+            uf.union(p, virtualBottomSite);
+        }
     }
 
     // opens the site (row, col) if it is not open already
@@ -103,7 +113,7 @@ public class Percolation {
 
     public static void main(String args[]){
         // System.out.println(getSite(0, 0));
-        // Percolation percolation = new Percolation(3);
+        Percolation percolation = new Percolation(3);
         // percolation.open(10, 10);
     }
 }
