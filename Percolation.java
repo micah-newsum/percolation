@@ -20,8 +20,10 @@ public class Percolation {
         virtualBottomSite = totalSites - 1;
         uf = new WeightedQuickUnionUF(totalSites);
         sites = new boolean[n][n];
-        // TODO connect all of top row to virtualTopSite
-        // TODO connect all of bottom row to virtualBottomSite
+
+        // connect all of top row to virtualTopSite
+        
+        // connect all of bottom row to virtualBottomSite
     }
 
     // opens the site (row, col) if it is not open already
@@ -44,7 +46,19 @@ public class Percolation {
             uf.union(p, q);
         }
 
-        // TODO union top and bottom sites
+        // union top site
+        int topCol = col + 1;
+        if (isValidSite(row, topCol) && isOpen(row, topCol)){
+            int q = getSite(row, topCol);
+            uf.union(p, q);
+        }
+
+        // union bottom site
+        int bottomCol = col - 1;
+        if (isValidSite(row, bottomCol) && isOpen(row, col)){
+            int q = getSite(row, bottomCol);
+            uf.union(p, q);
+        }
 
         numberOfOpenSites++;
     }
