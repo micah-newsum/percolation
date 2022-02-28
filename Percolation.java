@@ -24,14 +24,12 @@ public class Percolation {
         // connect all of top row to virtualTopSite
         for (int i = 1; i <= n; i++) {
             int p = getSite(1, i);
-            System.out.printf("p=%d ,q=%d\n",p , virtualTopSite);
             uf.union(p, virtualTopSite);
         }
 
         // connect all of bottom row to virtualBottomSite
         for (int i = 1; i <= n; i++) {
             int p = getSite(n, i);
-            System.out.printf("p=%d ,q=%d\n", p , virtualBottomSite);
             uf.union(p, virtualBottomSite);
         }
     }
@@ -90,7 +88,7 @@ public class Percolation {
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
         check(row, col);
-        return sites[row - 1][col - 1];
+        return !sites[row - 1][col - 1];
     }
 
     private void check(int row, int col){
@@ -112,8 +110,37 @@ public class Percolation {
     }
 
     public static void main(String args[]){
-        // System.out.println(getSite(0, 0));
         Percolation percolation = new Percolation(3);
-        // percolation.open(10, 10);
+
+        // test opening outside boundaries
+        try {
+            percolation.isOpen(0, 0);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e);
+        }
+
+        try {
+            percolation.isOpen(4, 4);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e);
+        }
+
+        percolation.open(1, 1);
+        percolation.open(2, 1);
+        percolation.open(3, 1);
+        System.out.println("System percolates: "+percolation.percolates());
+
+        // test full site
+        System.out.println("Site is full: "+percolation.isFull(2, 2));
+        System.out.println("Site is open: "+percolation.isOpen(2, 1));
+
+        // open remaining sites and check if full
+        percolation.open(2, 1);
+        percolation.open(2, 2);
+        percolation.open(2, 3);
+        percolation.open(3, 1);
+        percolation.open(3, 2);
+        percolation.open(3, 3);
+        System.out.printf("%d out of 9 sites open\n",percolation.numberOfOpenSites());
     }
 }
