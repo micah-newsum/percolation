@@ -36,42 +36,43 @@ public class Percolation {
 
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
+        check(row, col);
+        
         if (isOpen(row, col)){
             return;
         }
-
-        check(row, col);
-        sites[row - 1][col - 1] = true;
+        
         int p = getSite(row, col);
         
         // union left site
-        int leftRow = row - 1;
-        if (isValidSite(leftRow, col) && isOpen(leftRow, col)){
-            int q = getSite(leftRow, col);
+        int left = col - 1;
+        if (isValidSite(row, left) && isOpen(row, col)){
+            int q = getSite(row, col);
             uf.union(p, q);
         }
 
         // union right site
-        int rightRow = row + 1;
-        if (isValidSite(rightRow, col) && isOpen(rightRow, col)){
-            int q = getSite(rightRow, col);
+        int right = col + 1;
+        if (isValidSite(row, right) && isOpen(row, right)){
+            int q = getSite(row, right);
             uf.union(p, q);
         }
 
         // union top site
-        int topCol = col + 1;
-        if (isValidSite(row, topCol) && isOpen(row, topCol)){
-            int q = getSite(row, topCol);
+        int top = row + 1;
+        if (isValidSite(top, col) && isOpen(top, col)){
+            int q = getSite(top, col);
             uf.union(p, q);
         }
 
         // union bottom site
-        int bottomCol = col - 1;
-        if (isValidSite(row, bottomCol) && isOpen(row, col)){
-            int q = getSite(row, bottomCol);
+        int bottom = row - 1;
+        if (isValidSite(bottom, col) && isOpen(bottom, col)){
+            int q = getSite(bottom, col);
             uf.union(p, q);
         }
 
+        sites[row - 1][col - 1] = true;
         numberOfOpenSites++;
     }
 
@@ -116,6 +117,11 @@ public class Percolation {
     public static void main(String args[]){
         Percolation percolation = new Percolation(3);
 
+        // Change access to public to test
+        // System.out.println(percolation.getSite(1, 1)); // expect 0
+        // System.out.println(percolation.getSite(2, 2)); // expect 4
+        // System.out.println(percolation.getSite(3, 3)); // expect 8
+
         // test opening outside boundaries
         try {
             percolation.isOpen(0, 0);
@@ -132,11 +138,11 @@ public class Percolation {
         percolation.open(1, 1);
         percolation.open(2, 1);
         percolation.open(3, 1);
-        System.out.println("System percolates: "+percolation.percolates());
+        System.out.println("System percolates: "+percolation.percolates()); // expect true
 
         // test full site
-        System.out.println("Site is full: "+percolation.isFull(2, 2));
-        System.out.println("Site is open: "+percolation.isOpen(2, 1));
+        System.out.println("Site is full: "+percolation.isFull(2, 2)); // expect true
+        System.out.println("Site is open: "+percolation.isOpen(2, 1)); // expect true
 
         // open remaining sites and check if full
         percolation.open(2, 1);
