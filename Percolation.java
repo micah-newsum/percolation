@@ -9,7 +9,7 @@ public class Percolation {
     private int n;
 
     // creates n-by-n grid, with all sites initially blocked
-    public Percolation(int n){
+    public Percolation(int n) {
         if (n <= 0){
             throw new IllegalArgumentException("n must be greater than 0");
         }
@@ -24,17 +24,12 @@ public class Percolation {
         // connect all of top row to virtualTopSite
         for (int i = 1; i <= n; i++) {
             int p = getSite(1, i);
-            // System.out.println(p);
-            // System.out.println(virtualTopSite);
             uf.union(p, virtualTopSite);
         }
 
         // connect all of bottom row to virtualBottomSite
         for (int i = 1; i <= n; i++) {
             int p = getSite(n, i);
-            System.out.printf("row=%d, col=%d\n",n, i);
-            System.out.println(p);
-            // System.out.println(virtualBottomSite);
             uf.union(p, virtualBottomSite);
         }
     }
@@ -51,8 +46,8 @@ public class Percolation {
         
         // union left site
         int left = col - 1;
-        if (isValidSite(row, left) && isOpen(row, col)){
-            int q = getSite(row, col);
+        if (isValidSite(row, left) && isOpen(row, left)){
+            int q = getSite(row, left);
             uf.union(p, q);
         }
 
@@ -169,16 +164,15 @@ public class Percolation {
         // percolation.open(3, 3);
         // System.out.printf("%d out of 9 sites open\n",percolation.numberOfOpenSites());
         
-        int n = 4;
+        // check all columns for percolation
+        int n = 3;
         Percolation percolation = new Percolation(n);
-        System.out.println(percolation.getSite(4, 1)); // expect 12
-        System.out.println(percolation.getSite(4, 2)); // expect 13
-        System.out.println(percolation.getSite(4, 3)); // expect 14
-        System.out.println(percolation.getSite(4, 4)); // expect 15
-        // for (int i = 1; i < n; i++){
-        //     percolation.open(i, 4);
-        // }
-        // System.out.println("Percolates: "+percolation.percolates());
-        // percolation.print();
+        percolation.open(1, 1);
+        percolation.open(1, 2);
+        percolation.open(2, 2);
+        percolation.open(2, 3);
+        percolation.open(3, 3);
+        System.out.println("Percolates: "+percolation.percolates());
+        percolation.print();
     }
 }
