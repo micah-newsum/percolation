@@ -76,7 +76,7 @@ public class Percolation {
         numberOfOpenSites++;
     }
 
-    public int getSite(int row, int col){
+    private int getSite(int row, int col){
         return (row - 1) * n + (col - 1);
     }
 
@@ -112,16 +112,6 @@ public class Percolation {
     // does the system percolate?
     public boolean percolates(){
         return uf.connected(virtualTopSite, virtualBottomSite);
-    }
-
-    public void print(){
-        for(int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                String site = sites[i][j] ? "X" : "O";
-                System.out.print(" "+site+" ");
-            }
-            System.out.println();
-        }
     }
 
     public static void main(String args[]){
@@ -163,16 +153,5 @@ public class Percolation {
         // percolation.open(3, 2);
         // percolation.open(3, 3);
         // System.out.printf("%d out of 9 sites open\n",percolation.numberOfOpenSites());
-        
-        // check all columns for percolation
-        int n = 3;
-        Percolation percolation = new Percolation(n);
-        percolation.open(1, 1);
-        percolation.open(1, 2);
-        percolation.open(2, 2);
-        percolation.open(2, 3);
-        percolation.open(3, 3);
-        System.out.println("Percolates: "+percolation.percolates());
-        percolation.print();
     }
 }
