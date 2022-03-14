@@ -38,7 +38,7 @@ public class Percolation {
     public void open(int row, int col) {
         check(row, col); 
         
-        if (isOpen(row, col)){
+        if (isOpen(row, col)) {
             return;
         }
         
@@ -46,14 +46,14 @@ public class Percolation {
         
         // union left site
         int left = col - 1;
-        if (isValidSite(row, left) && isOpen(row, left)){
+        if (isValidSite(row, left) && isOpen(row, left)) {
             int q = getSite(row, left);
             uf.union(p, q);
         }
 
         // union right site
         int right = col + 1;
-        if (isValidSite(row, right) && isOpen(row, right)){
+        if (isValidSite(row, right) && isOpen(row, right)) {
             int q = getSite(row, right);
             uf.union(p, q);
         }
@@ -91,9 +91,19 @@ public class Percolation {
     }
 
     // is the site (row, col) full?
+    // aka is site connected to any site in the top row?
+    /**
+     * Need to keep track of full sites:
+     *      - A site is full if it's open and in the top row, or if it's connected to an open site
+     *        in the top row.
+     *      - Two sites are connected if they are both open and share a left, right, top or bottom border
+     *      - If a site is in the top row, it is connected to the virtual top site.
+     *      - Therefore, if any site is connected to virtual top site, it is full.
+     */
     public boolean isFull(int row, int col) {
         check(row, col);
-        return !sites[row - 1][col - 1];
+        int p = uf.find(getSite(row, col));
+        return uf.find(p) == uf.find(virtualTopSite);
     }
 
     private void check(int row, int col){
@@ -111,10 +121,10 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates(){
-        return uf.connected(virtualTopSite, virtualBottomSite);
+        return uf.find(virtualTopSite) == uf.find(virtualBottomSite);
     }
 
-    public static void main(String args[]){
+    public static void main(String[] args){
         // Percolation percolation = new Percolation(3);
 
         // Change access to public to test
