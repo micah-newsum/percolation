@@ -29,4 +29,38 @@ public class PercolationTest {
         assertTrue(percolation.isFull(2, 2));
         assertTrue(percolation.isFull(3, 2));
     }
+
+    @Test
+    public void testDoesNotPercolateEdgeCases() {
+        Percolation percolation = new Percolation(1);
+        assertFalse(percolation.percolates());
+
+        percolation = new Percolation(2);
+        percolation.open(1, 1);
+        assertFalse(percolation.percolates());
+
+        percolation = new Percolation(2);
+        percolation.open(2, 1);
+        assertFalse(percolation.percolates());
+    }
+
+    @Test
+    public void testPercolatesEdgeCases() {
+        Percolation percolation = new Percolation(1);
+        percolation.open(1, 1);
+        assertTrue(percolation.percolates());
+
+        percolation = new Percolation(2);
+        percolation.open(1, 1);
+        percolation.open(2, 1);
+        assertTrue(percolation.percolates());
+    }
+
+    @Test
+    public void testPercolatesVerticalColumn() {
+    }
+
+    @Test
+    public void testPercolatesZigZag() {
+    }
 }

@@ -10,7 +10,7 @@ public class Percolation {
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
-        if (n <= 0){
+        if (n <= 0) {
             throw new IllegalArgumentException("n must be greater than 0");
         }
 
@@ -20,30 +20,32 @@ public class Percolation {
         virtualBottomSite = totalSites - 1;
         uf = new WeightedQuickUnionUF(totalSites);
         sites = new boolean[n][n];
+        
+        if (n > 1) {
+            // connect all of top row to virtualTopSite
+            for (int i = 1; i <= n; i++) {
+                int p = getSite(1, i);
+                uf.union(p, virtualTopSite);
+            }
 
-        // connect all of top row to virtualTopSite
-        for (int i = 1; i <= n; i++) {
-            int p = getSite(1, i);
-            uf.union(p, virtualTopSite);
-        }
-
-        // connect all of bottom row to virtualBottomSite
-        for (int i = 1; i <= n; i++) {
-            int p = getSite(n, i);
-            uf.union(p, virtualBottomSite);
+            // connect all of bottom row to virtualBottomSite
+            for (int i = 1; i <= n; i++) {
+                int p = getSite(n, i);
+                uf.union(p, virtualBottomSite);
+            }
         }
     }
 
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
-        check(row, col); 
-        
+        check(row, col);
+
         if (isOpen(row, col)) {
             return;
         }
-        
+
         int p = getSite(row, col);
-        
+
         // union left site
         int left = col - 1;
         if (isValidSite(row, left) && isOpen(row, left)) {
@@ -60,14 +62,14 @@ public class Percolation {
 
         // union top site
         int top = row + 1;
-        if (isValidSite(top, col) && isOpen(top, col)){
+        if (isValidSite(top, col) && isOpen(top, col)) {
             int q = getSite(top, col);
             uf.union(p, q);
         }
 
         // union bottom site
         int bottom = row - 1;
-        if (isValidSite(bottom, col) && isOpen(bottom, col)){
+        if (isValidSite(bottom, col) && isOpen(bottom, col)) {
             int q = getSite(bottom, col);
             uf.union(p, q);
         }
@@ -76,16 +78,16 @@ public class Percolation {
         numberOfOpenSites++;
     }
 
-    private int getSite(int row, int col){
+    private int getSite(int row, int col) {
         return (row - 1) * n + (col - 1);
     }
 
-    private boolean isValidSite(int row, int col){
+    private boolean isValidSite(int row, int col) {
         return !(row == 0 || row > n || col == 0 || col > n);
     }
 
     // is the site (row, col) open?
-    public boolean isOpen(int row, int col){
+    public boolean isOpen(int row, int col) {
         check(row, col);
         return sites[row - 1][col - 1];
     }
@@ -94,11 +96,13 @@ public class Percolation {
     // aka is site connected to any site in the top row?
     /**
      * Need to keep track of full sites:
-     *      - A site is full if it's open and in the top row, or if it's connected to an open site
-     *        in the top row.
-     *      - Two sites are connected if they are both open and share a left, right, top or bottom border
-     *      - If a site is in the top row, it is connected to the virtual top site.
-     *      - Therefore, if any site is connected to virtual top site, it is full.
+     * - A site is full if it's open and in the top row, or if it's connected to an
+     * open site
+     * in the top row.
+     * - Two sites are connected if they are both open and share a left, right, top
+     * or bottom border
+     * - If a site is in the top row, it is connected to the virtual top site.
+     * - Therefore, if any site is connected to virtual top site, it is full.
      */
     public boolean isFull(int row, int col) {
         check(row, col);
@@ -106,25 +110,29 @@ public class Percolation {
         return uf.find(p) == uf.find(virtualTopSite);
     }
 
-    private void check(int row, int col){
+    private void check(int row, int col) {
         if (row == 0 || row > n) {
-            throw new IllegalArgumentException("Invalid row: must be between 1 & "+ n);
+            throw new IllegalArgumentException("Invalid row: must be between 1 & " + n);
         } else if (col == 0 || col > n) {
             throw new IllegalArgumentException("Invalid column: must be between 1 & " + n);
-        } 
+        }
     }
 
     // returns the number of open sites
-    public int numberOfOpenSites(){
+    public int numberOfOpenSites() {
         return numberOfOpenSites;
     }
 
     // does the system percolate?
-    public boolean percolates(){
+    public boolean percolates() {
+        if (n == 1 && isOpen(1, 1)) {
+            return true;
+        }
+
         return uf.find(virtualTopSite) == uf.find(virtualBottomSite);
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         // Percolation percolation = new Percolation(3);
 
         // Change access to public to test
@@ -134,21 +142,22 @@ public class Percolation {
 
         // test opening outside boundaries
         // try {
-        //     percolation.isOpen(0, 0);
+        // percolation.isOpen(0, 0);
         // } catch (IllegalArgumentException e) {
-        //     System.out.println(e);
+        // System.out.println(e);
         // }
 
         // try {
-        //     percolation.isOpen(4, 4);
+        // percolation.isOpen(4, 4);
         // } catch (IllegalArgumentException e) {
-        //     System.out.println(e);
+        // System.out.println(e);
         // }
 
         // percolation.open(1, 1);
         // percolation.open(2, 1);
         // percolation.open(3, 1);
-        // System.out.println("System percolates: "+percolation.percolates()); // expect true
+        // System.out.println("System percolates: "+percolation.percolates()); // expect
+        // true
         // percolation.print();
 
         // // test full site
@@ -162,6 +171,7 @@ public class Percolation {
         // percolation.open(3, 1);
         // percolation.open(3, 2);
         // percolation.open(3, 3);
-        // System.out.printf("%d out of 9 sites open\n",percolation.numberOfOpenSites());
+        // System.out.printf("%d out of 9 sites
+        // open\n",percolation.numberOfOpenSites());
     }
 }
