@@ -110,9 +110,9 @@ public class Percolation {
     }
 
     private void check(int row, int col) {
-        if (row == 0 || row > n) {
+        if (row <= 0 || row > n) {
             throw new IllegalArgumentException("Invalid row: must be between 1 & " + n);
-        } else if (col == 0 || col > n) {
+        } else if (col <= 0 || col > n) {
             throw new IllegalArgumentException("Invalid column: must be between 1 & " + n);
         }
     }

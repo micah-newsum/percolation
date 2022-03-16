@@ -82,4 +82,28 @@ public class PercolationTest {
         percolation.open(3, 2);
         assertTrue(percolation.percolates());
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void openWithNegativeRowThrowsIllegalArgumentException() {
+        Percolation percolation = new Percolation(3);
+        percolation.open(-1, 3);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void openWithOutOfBoundsRowThrowsIllegalArgumentException() {
+        Percolation percolation = new Percolation(3);
+        percolation.open(4, 3);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void openWithNegativeColumnThrowsIllegalArgumentException() {
+        Percolation percolation = new Percolation(3);
+        percolation.open(3, -1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void openWithOutOfBoundsColumnThrowsIllegalArgumentException() {
+        Percolation percolation = new Percolation(3);
+        percolation.open(3, 4);
+    }
 }
