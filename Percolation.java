@@ -106,8 +106,7 @@ public class Percolation {
      */
     public boolean isFull(int row, int col) {
         check(row, col);
-        int p = uf.find(getSite(row, col));
-        return uf.find(p) == uf.find(virtualTopSite);
+        return isOpen(row, col) && uf.find(getSite(row, col)) == uf.find(virtualTopSite);
     }
 
     private void check(int row, int col) {

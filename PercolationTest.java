@@ -15,19 +15,27 @@ public class PercolationTest {
     @Test
     public void testIsFull() {
         Percolation percolation = new Percolation(3);
-        percolation.open(2, 1);
-        percolation.open(2, 2);
-        assertFalse(percolation.isFull(2, 1));
-        assertFalse(percolation.isFull(2, 2));
-        percolation.open(3, 2);
-        assertFalse(percolation.isFull(3, 2));
 
         // open top site
         percolation.open(1, 1);
         assertTrue(percolation.isFull(1, 1));
+
+        percolation.open(2, 1);
         assertTrue(percolation.isFull(2, 1));
+
+        percolation.open(2, 2);
         assertTrue(percolation.isFull(2, 2));
+
+        percolation.open(3, 2);
         assertTrue(percolation.isFull(3, 2));
+    }
+
+    @Test
+    public void testIsNotFull() {
+        Percolation percolation = new Percolation(3);
+        assertFalse(percolation.isFull(1, 1));
+        assertFalse(percolation.isFull(1, 2));
+        assertFalse(percolation.isFull(1, 3));
     }
 
     @Test
@@ -58,9 +66,20 @@ public class PercolationTest {
 
     @Test
     public void testPercolatesVerticalColumn() {
+        Percolation percolation = new Percolation(3);
+        percolation.open(1, 3);
+        percolation.open(2, 3);
+        percolation.open(3, 3);
+        assertTrue(percolation.percolates());
     }
 
     @Test
     public void testPercolatesZigZag() {
+        Percolation percolation = new Percolation(3);
+        percolation.open(1, 1);
+        percolation.open(1, 2);
+        percolation.open(2, 2);
+        percolation.open(3, 2);
+        assertTrue(percolation.percolates());
     }
 }
