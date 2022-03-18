@@ -20,20 +20,6 @@ public class Percolation {
         virtualBottomSite = totalSites - 1;
         uf = new WeightedQuickUnionUF(totalSites);
         sites = new boolean[n][n];
-        
-        if (n > 1) {
-            // connect all of top row to virtualTopSite
-            for (int i = 1; i <= n; i++) {
-                int p = getSite(1, i);
-                uf.union(p, virtualTopSite);
-            }
-
-            // connect all of bottom row to virtualBottomSite
-            for (int i = 1; i <= n; i++) {
-                int p = getSite(n, i);
-                uf.union(p, virtualBottomSite);
-            }
-        }
     }
 
     // opens the site (row, col) if it is not open already
@@ -61,17 +47,25 @@ public class Percolation {
         }
 
         // union top site
-        int top = row + 1;
-        if (isValidSite(top, col) && isOpen(top, col)) {
-            int q = getSite(top, col);
-            uf.union(p, q);
+        if (row == 1) {
+            uf.union(p, virtualTopSite);
+        } else {
+            int top = row - 1;
+            if (isValidSite(top, col) && isOpen(top, col)) {
+                int q = getSite(top, col);
+                uf.union(p, q);
+            }
         }
 
         // union bottom site
-        int bottom = row - 1;
-        if (isValidSite(bottom, col) && isOpen(bottom, col)) {
-            int q = getSite(bottom, col);
-            uf.union(p, q);
+        if (row == n) {
+            uf.union(p, virtualBottomSite);
+        } else {
+            int bottom = row + 1;
+            if (isValidSite(bottom, col) && isOpen(bottom, col)) {
+                int q = getSite(bottom, col);
+                uf.union(p, q);
+            }
         }
 
         sites[row - 1][col - 1] = true;
