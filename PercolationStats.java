@@ -4,7 +4,7 @@ import edu.princeton.cs.algs4.StdStats;
 public class PercolationStats {
     private final double simulations[];
     private final int trials;
-    private final double CONFIDENCE_95 = 1.96;
+    private final static double CONFIDENCE_95 = 1.96;
 
     // perform independent trials on an n-by-n grid
     public PercolationStats(int n, int trials) {
