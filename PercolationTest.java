@@ -3,7 +3,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class PercolationTest {
-    
+
     @Test
     public void testIsOpen() {
         Percolation percolation = new Percolation(3);
@@ -44,7 +44,6 @@ public class PercolationTest {
         assertTrue(percolation.isFull(2, 1));
         assertTrue(percolation.isFull(2, 2));
         assertTrue(percolation.isFull(2, 3));
-
 
         // bottom row should not be full
         assertFalse(percolation.isFull(3, 1));
@@ -154,5 +153,15 @@ public class PercolationTest {
     public void openWithOutOfBoundsColumnThrowsIllegalArgumentException() {
         Percolation percolation = new Percolation(3);
         percolation.open(3, 4);
+    }
+
+    @Test
+    public void whenSystemPercolatesItDoesNotBackwash() {
+        Percolation percolation = new Percolation(3);
+        percolation.open(1, 1);
+        percolation.open(2, 1);
+        percolation.open(3, 1);
+        percolation.open(3, 3);
+        assertFalse(percolation.isFull(3, 3));
     }
 }
