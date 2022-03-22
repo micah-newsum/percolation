@@ -2,9 +2,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
     private final WeightedQuickUnionUF uf;
-    private boolean[][] sites;
-    private final int virtualTopSite;
-    private final int virtualBottomSite;
+    private byte[][] sites;
     private int numberOfOpenSites;
     private final int n;
 
@@ -16,10 +14,8 @@ public class Percolation {
 
         this.n = n;
         int totalSites = (int) Math.pow(n, 2) + 2;
-        virtualTopSite = totalSites - 2;
-        virtualBottomSite = totalSites - 1;
         uf = new WeightedQuickUnionUF(totalSites);
-        sites = new boolean[n][n];
+        sites = new byte[n][n];
     }
 
     // opens the site (row, col) if it is not open already
@@ -48,7 +44,7 @@ public class Percolation {
 
         // union top site
         if (row == 1) {
-            uf.union(p, virtualTopSite);
+            // uf.union(p, virtualTopSite);
         } else {
             int top = row - 1;
             if (isValidSite(top, col) && isOpen(top, col)) {
@@ -59,7 +55,7 @@ public class Percolation {
 
         // union bottom site
         if (row == n) {
-            uf.union(p, virtualBottomSite);
+            // uf.union(p, virtualBottomSite);
         } else {
             int bottom = row + 1;
             if (isValidSite(bottom, col) && isOpen(bottom, col)) {
@@ -68,7 +64,12 @@ public class Percolation {
             }
         }
 
-        sites[row - 1][col - 1] = true;
+        // 110 open and full (0000-0110 6) 
+        // 101 open and connected to bottom (0000-0101 5)
+        // 111 open, full, and connected to bottom (0000-0111 7)
+        byte open = 4;
+        byte site = sites[row - 1][col - 1];
+        sites[row - 1][col - 1] = (byte) (site | open);
         numberOfOpenSites++;
     }
 
@@ -83,7 +84,8 @@ public class Percolation {
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
         check(row, col);
-        return sites[row - 1][col - 1];
+        byte open = 4; // 0000-0100 == 4
+        return (sites[row - 1][col - 1] & open) > 0;
     }
 
     // is the site (row, col) full?
@@ -100,7 +102,8 @@ public class Percolation {
      */
     public boolean isFull(int row, int col) {
         check(row, col);
-        return isOpen(row, col) && uf.find(getSite(row, col)) == uf.find(virtualTopSite);
+        return false;
+        // return isOpen(row, col) && uf.find(getSite(row, col)) == uf.find(virtualTopSite);
     }
 
     private void check(int row, int col) {
@@ -122,49 +125,7 @@ public class Percolation {
             return true;
         }
 
-        return uf.find(virtualTopSite) == uf.find(virtualBottomSite);
-    }
-
-    public static void main(String[] args) {
-        // Percolation percolation = new Percolation(3);
-
-        // Change access to public to test
-        // System.out.println(percolation.getSite(1, 1)); // expect 0
-        // System.out.println(percolation.getSite(2, 2)); // expect 4
-        // System.out.println(percolation.getSite(3, 3)); // expect 8
-
-        // test opening outside boundaries
-        // try {
-        // percolation.isOpen(0, 0);
-        // } catch (IllegalArgumentException e) {
-        // System.out.println(e);
-        // }
-
-        // try {
-        // percolation.isOpen(4, 4);
-        // } catch (IllegalArgumentException e) {
-        // System.out.println(e);
-        // }
-
-        // percolation.open(1, 1);
-        // percolation.open(2, 1);
-        // percolation.open(3, 1);
-        // System.out.println("System percolates: "+percolation.percolates()); // expect
-        // true
-        // percolation.print();
-
-        // // test full site
-        // System.out.println("Site is full: "+percolation.isFull(2, 2)); // expect true
-        // System.out.println("Site is open: "+percolation.isOpen(2, 1)); // expect true
-
-        // // open remaining sites and check if full
-        // percolation.open(2, 1);
-        // percolation.open(2, 2);
-        // percolation.open(2, 3);
-        // percolation.open(3, 1);
-        // percolation.open(3, 2);
-        // percolation.open(3, 3);
-        // System.out.printf("%d out of 9 sites
-        // open\n",percolation.numberOfOpenSites());
+        // return uf.find(virtualTopSite) == uf.find(virtualBottomSite);
+        return false;
     }
 }
