@@ -5,8 +5,9 @@ import static org.junit.Assert.assertTrue;
 public class PercolationTest {
 
     @Test
-    public void testIsOpenReturnsTrue() {
+    public void testIsOpen() {
         Percolation percolation = new Percolation(3);
+        assertFalse(percolation.isOpen(1, 1));
         percolation.open(1, 1);
         assertTrue(percolation.isOpen(1, 1));
     }
