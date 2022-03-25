@@ -18,7 +18,7 @@ public class PercolationTest {
     }
 
     @Test
-    public void testIsFullwithFirstColumnOpen() {
+    public void testIsFullwithTopSiteOpenInFirstColumn() {
         Percolation percolation = new Percolation(3);
 
         // open top site
@@ -27,13 +27,22 @@ public class PercolationTest {
     }
 
     @Test
-    public void testIsNotFullwithFirstColumnOpen() {
+    public void testIsFullwithTopSiteOpenInLastColumn() {
+        Percolation percolation = new Percolation(3);
+
+        // open top site
+        percolation.open(1, 3);
+        assertTrue(percolation.isFull(1, 3));
+    }
+
+    @Test
+    public void testIsNotFullIfSiteNotOpen() {
         Percolation percolation = new Percolation(3);
         assertFalse(percolation.isFull(1, 1));
     }
 
     @Test 
-    public void testBottomSiteFullWhenConnectedToTopOpenSite() {
+    public void testBottomSiteFullWhenConnectedToTopOpenSiteInFirstColumn() {
         Percolation percolation = new Percolation(3);
         percolation.open(1, 1);
         percolation.open(2, 1);
@@ -41,8 +50,16 @@ public class PercolationTest {
     }
 
     @Test 
-    public void testRightSiteFullWhenConnectedToTopOpenSite() {
+    public void testBottomSiteFullWhenConnectedToTopOpenSiteInLastColumn() {
         Percolation percolation = new Percolation(3);
+        percolation.open(1, 3);
+        percolation.open(2, 3);
+        assertTrue(percolation.isFull(2, 3));
+    }
+
+    @Test 
+    public void testRightSiteFullWhenConnectedToTopOpenSite() {
+        Percolation percolation = new Percolation(4);
         percolation.open(1, 1);
         percolation.open(2, 1);
         percolation.open(2, 2);
@@ -56,6 +73,16 @@ public class PercolationTest {
         percolation.open(2, 3);
         percolation.open(2, 2);
         assertTrue(percolation.isFull(2, 2));
+    }
+
+
+    @Test
+    public void testBottomSiteFullIfConnectedToTopFullSite() {
+        Percolation percolation = new Percolation(3);
+        percolation.open(3, 1);
+        percolation.open(2, 1);
+        percolation.open(1, 1);
+        assertTrue(percolation.isFull(3, 1));
     }
 
     @Test
