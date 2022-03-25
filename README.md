@@ -1,30 +1,7 @@
-- Store sites in byte array
-- Each byte will store 3 1 bit values.
-- The first bit will represent an open or closed site.
-- The second bit and open site connected to the top (full)
-- The third bit an open site that is connected to the bottom
-- Create a boolean instance variable called percolates. Within the open method, check if system percolates and if so, set percoaltes to true.
-- The system will percolate if a site is open, it's full, and it's connected to the bottom.
-- open:
-    - set open site bit to 1.
-    - check if site is in top row. 
-        - set isFull bit to 1. 
-    - check if site above is valid.
-        - check if site above is open.
-            - union the two sites. 
-        - Check if site above is full.
-            - set site to full.
-    - check if left site is valid.
-        - check if left site is open.
-            - union two sites.
-            - check if site is full.
-                - set site to full.
-    - repeat same logic for right site.
-    - check if site is in bottom row.
-        - set is connected to bottom bit to 1.
-    - check if bottom site is open.
-        - union with bottom site.
-        - check if bottom site in last row.
-            - set is connected to bottom bit to 1.
-    - check if site is full and connected to bottom.
-        - set percolates to true.
+How to check if site is full without checking if it's connected to virtual top site?
+- Add logic within open method that sets a flag on site indicating that it is connected to the top.
+    - Change boolean sites to byte sites.
+        - lowest order bit will indicate if site is open.
+        - second lowest order bit will indicate if site is open and connected to top.
+- Percolation will still check if site is connected to virutal top.
+- isFull will check site bits for openness and connection to top, rather than simply it being connected to virtual top site.
