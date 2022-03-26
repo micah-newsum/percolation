@@ -1,7 +1,5 @@
-How to check if site is full without checking if it's connected to virtual top site?
-- Add logic within open method that sets a flag on site indicating that it is connected to the top.
-    - Change boolean sites to byte sites.
-        - lowest order bit will indicate if site is open.
-        - second lowest order bit will indicate if site is open and connected to top.
-- Percolation will still check if site is connected to virutal top.
-- isFull will check site bits for openness and connection to top, rather than simply it being connected to virtual top site.
+# Backwash problem
+Backwash occurs when a site falsely returns true to the "isFull" method. This occurs because of the use of virtual top and bottom sites. More specifially, upon initialization of the percolation data type, every top site is connected to the virtual top site, and every bottom site connected to the virtual bottom site. Then, within the "isFull" implementation one checks if the site is connected to the virtual top site. The problem occurs when a site opens on the bottom causing the system to percolate. Then, every bottom site that is subsequently opened returns true when the "isFull" method is invoked. This is because it is a member of the same connected component of the first bottom site to percolate.
+
+# Solution
+- A full site is one connected to an open site in the top row. To keep track of all full sites, we will create a separate union find data type called, "fullSites". When a site is opened, if it is in the top row, it will be unioned with the virtual top site in "fullSites". If an adjacent site is open, it too will be unioned. 
