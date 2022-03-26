@@ -2,7 +2,8 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
     private final WeightedQuickUnionUF uf;
-    private byte[][] sites;
+    private final WeightedQuickUnionUF fullSites;
+    private boolean[][] sites;
     private final int virtualTopSite;
     private final int virtualBottomSite;
     private int numberOfOpenSites;
@@ -19,7 +20,8 @@ public class Percolation {
         virtualTopSite = totalSites - 2;
         virtualBottomSite = totalSites - 1;
         uf = new WeightedQuickUnionUF(totalSites);
-        sites = new byte[n][n];
+        fullSites = new WeightedQuickUnionUF(totalSites - 1); // virutal bottom site unecessary
+        sites = new boolean[n][n];
     }
 
     // opens the site (row, col) if it is not open already
@@ -30,46 +32,21 @@ public class Percolation {
             return;
         }
 
-        // open site by setting lowest order bit to 1 (0000-0001)
-        sites[row - 1][col - 1] = 1;
-        byte site = sites[row - 1][col - 1];
-
-        // set site to full by setting 2nd lowest order bit to 1 (0000-0010)
-        if (row == 1) {
-            sites[row - 1][col - 1] = (byte) (site | 2);
-            site = sites[row - 1][col - 1];
-        }
+        // open site
+        sites[row - 1][col - 1] = true;
 
         int p = getSite(row, col);
-
-        // union left site
-        int left = col - 1;
-        if (isValidSite(row, left) && isOpen(row, left)) {
-            byte leftSite = sites[row - 1][col - 2];
-            sites[row - 1][col - 1] = (byte) (leftSite | site);
-            int q = getSite(row, left);
-            uf.union(p, q);
-        }
-
-        // union right site
-        int right = col + 1;
-        if (isValidSite(row, right) && isOpen(row, right)) {
-            byte rightSite = sites[row - 1][col];
-            sites[row - 1][col - 1] = (byte) (rightSite | site);
-            int q = getSite(row, right);
-            uf.union(p, q);
-        }
 
         // union top site
         if (row == 1) {
             uf.union(p, virtualTopSite);
+            fullSites.union(p, virtualTopSite);
         } else {
             int top = row - 1;
             if (isValidSite(top, col) && isOpen(top, col)) {
-                byte topSite = sites[row - 2][col - 1];
-                sites[row - 1][col - 1] = (byte) (topSite | site);
                 int q = getSite(top, col);
                 uf.union(p, q);
+                fullSites.union(p, q);
             }
         }
 
@@ -79,11 +56,26 @@ public class Percolation {
         } else {
             int bottom = row + 1;
             if (isValidSite(bottom, col) && isOpen(bottom, col)) {
-                byte bottomSite = sites[row][col - 1];
-                sites[row - 1][col - 1] = (byte) (bottomSite | site);
                 int q = getSite(bottom, col);
                 uf.union(p, q);
+                fullSites.union(p, q);
             }
+        }
+
+        // union left site
+        int left = col - 1;
+        if (isValidSite(row, left) && isOpen(row, left)) {
+            int q = getSite(row, left);
+            uf.union(p, q);
+            fullSites.union(p, q);
+        }
+
+        // union right site
+        int right = col + 1;
+        if (isValidSite(row, right) && isOpen(row, right)) {
+            int q = getSite(row, right);
+            uf.union(p, q);
+            fullSites.union(p, q);
         }
 
         numberOfOpenSites++;
@@ -100,7 +92,7 @@ public class Percolation {
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
         check(row, col);
-        return (sites[row - 1][col - 1] & 1) > 0;
+        return sites[row - 1][col - 1];
     }
 
     // is the site (row, col) full?
@@ -117,7 +109,7 @@ public class Percolation {
      */
     public boolean isFull(int row, int col) {
         check(row, col);
-        return (sites[row - 1][col - 1] & 2) > 0;
+        return fullSites.find(getSite(row, col)) == fullSites.find(virtualTopSite);
     }
 
     private void check(int row, int col) {
